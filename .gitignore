@@ -122,6 +122,8 @@ celerybeat.pid
 
 # Environments
 .env
+backend/.env
+selectve-classification/.env
 .venv
 env/
 venv/
