@@ -188,19 +188,22 @@ async def progress_stream():
             await asyncio.sleep(0.5)
     return EventSourceResponse(event_generator())
 
+
 # Main Excel processing endpoint
 @app.post("/classify")
 async def classify_excel(file: UploadFile = File(...)):
     global progress_value
     df = pd.read_excel(file.file, dtype={"EAN": str})
-
     results = []
+
     for idx, row in df.iterrows():
-        category, gender, segment, subsegment = classify_product(row)
+        # run blocking function in thread
+        category, gender, segment, subsegment = await asyncio.to_thread(classify_product, row)
         results.append([category, gender, segment, subsegment])
 
         # update progress
         progress_value = int((idx + 1) / len(df) * 100)
+        await asyncio.sleep(0.01)  # give control to event loop
 
     df[["Category_fin","Gender_fin","Segment_fin","Subsegment_fin"]] = pd.DataFrame(results, index=df.index)
 

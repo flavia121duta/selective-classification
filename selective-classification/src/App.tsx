@@ -52,7 +52,7 @@ export default function App() {
 
     return (
         <div style={styles.container}>
-            <h1>Cosmetic Product Classifier</h1>
+            <h1>Selective Product Classifier</h1>
 
             <label style={styles.button}>
                 <img src={upload_icon} alt="upload icon" width={20} height={20} style={{ marginRight: 8 }} />
@@ -64,9 +64,17 @@ export default function App() {
 
             <br />
 
-            <button style={styles.submit} onClick={uploadFile} disabled={!file || loading}>
-                {loading ? "Processing data, please wait..." : "Classify Products"}
-            </button>
+            {
+                (loading && downloadUrl == null) && <p>Processing data, please wait...</p>
+            }
+
+            {
+                (!loading && downloadUrl == null) &&
+                <button style={styles.submit} onClick={uploadFile} disabled={!file || loading}>
+                    Classify Products
+                </button>
+            }
+
 
             {loading && (
                 <div style={{ marginTop: 10 }}>
@@ -91,7 +99,8 @@ const styles: { [key: string]: React.CSSProperties } = {
         maxWidth: 500,
         margin: "40px auto",
         textAlign: "center",
-        fontFamily: "Arial, sans-serif"
+        fontFamily: "Arial, sans-serif",
+        marginTop: "10rem"
     },
     button: {
         marginTop: 15,
