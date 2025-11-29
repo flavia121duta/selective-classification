@@ -1,0 +1,8 @@
+pandas
+openai
+tqdm
+python-dotenv
+sse-starlette
+openpyxl
+fastapi
+uvicorn
