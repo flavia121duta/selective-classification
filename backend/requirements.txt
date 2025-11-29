@@ -6,3 +6,4 @@ sse-starlette
 openpyxl
 fastapi
 uvicorn
+python-multipart
