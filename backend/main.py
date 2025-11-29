@@ -143,6 +143,12 @@ def classify_product(row, max_retries=3):
     Product info (JSON):
     {product_info}
 
+    Evertything that is for sexual wellness, intimate care, condoms, lubricants, etc. should be classified as SKINCARE → SKINCARE TOTAL BODY → SKINCARE ALL OTHER BODY.
+
+    Everthing that is for babies/children should be classified as SKINCARE → UNISEX → SKINCARE TOTAL BODY → SKINCARE ALL OTHER BODY.
+
+    Everything that is for tooth care, oral hygiene, toothpaste, toothbrushes, mouthwash, etc. should be classified as SKINCARE → UNISEX → SKINCARE TOTAL BODY → SKINCARE ALL OTHER BODY.
+
     Return ONLY JSON with: Category_fin, Gender_fin, Segment_fin, Subsegment_fin.
     If unsure, choose the most likely.
     """
@@ -160,18 +166,24 @@ def classify_product(row, max_retries=3):
             if content.startswith("```"):
                 content = "\n".join(content.split("\n")[1:-1]).strip()
             data = json.loads(content)
+
             if data.get("Category_fin") == "MAKEUP":
-                data["Gender"] = "WOMEN"
+                data["Gender_fin"] = "WOMEN"
+            if data.get("Segment_fin") == "FRAGRANCE HOME SCENTS":
+                data["Gender_fin"] = "HOME SCENTS"
+            if data.get("Subsegment_fin") in ["FRAGRANCE DIFFUSERS", "FRAGRANCE CANDLES", "FRAGRANCE ROOM FRESHENERS", "FRAGRANCE ALL OTHER HOME ANCILLARIES"]:
+                data["Gender_fin"] = "HOME SCENTS"
+                
             return (
                 data.get("Category_fin", "ERROR"),
-                data.get("Gender_fin", "UNISEX"),
+                data.get("Gender_fin", "ERROR"),
                 data.get("Segment_fin", "ERROR"),
                 data.get("Subsegment_fin", "ERROR")
             )
         except:
             attempt += 1
             time.sleep(1)
-    return "ERROR", "UNISEX", "ERROR", "ERROR"
+    return "ERROR", "ERROR", "ERROR", "ERROR"
 
 
 progress_value = 0  # shared progress variable
@@ -213,9 +225,8 @@ async def classify_excel(file: UploadFile = File(...)):
     # Reset progress
     progress_value = 0
 
-    return FileResponse(tmp.name, filename="produse_clasificate.xlsx")
+    return FileResponse(tmp.name, filename="produse_clasificate_AI.xlsx")
 
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

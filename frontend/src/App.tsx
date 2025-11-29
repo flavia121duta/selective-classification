@@ -11,6 +11,7 @@ export default function App() {
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
   const API_BASE_URL = "https://selective-classification.onrender.com";
+  // const LOCAL_API_BASE_URL = "http://localhost:8000";
 
 
   // SSE for progress
@@ -110,7 +111,7 @@ export default function App() {
         className={styles["beauty-products"]}
       />
 
-      <div className={styles.instructionBox}>
+      {/* <div className={styles.instructionBox}>
         <p>Upload an Excel file that has the following structure:</p>
         <ol className={styles.fieldList}>
           <li>Retailer</li>
@@ -129,7 +130,7 @@ export default function App() {
         </ol>
 
         <p>Fields marked with * are used for classification.</p>
-      </div>
+      </div> */}
     </div>
   );
 }
