@@ -10,9 +10,12 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
+  const API_BASE_URL = "https://selective-classification.onrender.com";
+
+
   // SSE for progress
   useEffect(() => {
-    const eventSource = new EventSource("http://localhost:8000/progress");
+    const eventSource = new EventSource(`${API_BASE_URL}/progress`);
     eventSource.onmessage = (event) => {
       setProgress(Number(event.data));
     };
@@ -37,7 +40,7 @@ export default function App() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/classify", {
+      const response = await fetch(`${API_BASE_URL}/classify`, {
         method: "POST",
         body: formData,
       });
